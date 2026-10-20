@@ -1,0 +1,22 @@
+name: Build Piper Windows
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure CMake
+        run: cmake -Bbuild -DCMAKE_INSTALL_PREFIX=_install/piper
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Install
+        run: cmake --install build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: piper_windows_amd64
+          path: _install/piper/
