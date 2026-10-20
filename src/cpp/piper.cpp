@@ -478,12 +478,20 @@ void textToAudio(PiperConfig &config, Voice &voice, std::string text,
     phonemize_codepoints(text, codepointsConfig, phonemes);
   }
 
-  // Synthesize each sentence independently.
+    // GOM TẤT CẢ PHONEMES CỦA CÁC CÂU CON THÀNH 1 MẢNG DUY NHẤT (CHỐNG TỰ NGẮT BẬY)
+  std::vector<Phoneme> singleSentencePhonemes;
+    for (auto &sent : phonemes) {
+    for (auto ph : sent) {
+      if (ph != ' ') {
+        singleSentencePhonemes.push_back(ph);
+      }
+    }
+  }
+  // Đưa singleSentencePhonemes vào 1 lượt suy luận VITS duy nhất
   std::vector<PhonemeId> phonemeIds;
   std::map<Phoneme, std::size_t> missingPhonemes;
-  for (auto phonemesIter = phonemes.begin(); phonemesIter != phonemes.end();
-       ++phonemesIter) {
-    std::vector<Phoneme> &sentencePhonemes = *phonemesIter;
+  std::vector<Phoneme> &sentencePhonemes = singleSentencePhonemes;
+  {
 
     if (spdlog::should_log(spdlog::level::debug)) {
       // DEBUG log for phonemes
