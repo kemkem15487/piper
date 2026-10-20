@@ -478,14 +478,10 @@ void textToAudio(PiperConfig &config, Voice &voice, std::string text,
     phonemize_codepoints(text, codepointsConfig, phonemes);
   }
 
-    // GOM TẤT CẢ PHONEMES CỦA CÁC CÂU CON THÀNH 1 MẢNG DUY NHẤT (CHỐNG TỰ NGẮT BẬY)
+      // GOM TẤT CẢ PHONEMES CỦA CÁC CÂU CON THÀNH 1 MẢNG DUY NHẤT (CHỐNG TỰ NGẮT BẬY)
   std::vector<Phoneme> singleSentencePhonemes;
-    for (auto &sent : phonemes) {
-    for (auto ph : sent) {
-      if (ph != ' ') {
-        singleSentencePhonemes.push_back(ph);
-      }
-    }
+  for (auto &sent : phonemes) {
+    singleSentencePhonemes.insert(singleSentencePhonemes.end(), sent.begin(), sent.end());
   }
   // Đưa singleSentencePhonemes vào 1 lượt suy luận VITS duy nhất
   std::vector<PhonemeId> phonemeIds;
